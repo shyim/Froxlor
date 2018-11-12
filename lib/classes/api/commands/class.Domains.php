@@ -650,7 +650,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			$zonefile = $this->getParam('zonefile', true, $result['zonefile']);
 			$dkim = intval($this->getParam('dkim', true, $result['dkim']));
 			$specialsettings = $this->getParam('specialsettings', true, $result['specialsettings']);
-			$ssfs = $this->getParam('specialsettingsforsubdomains', true, 0);
 			$notryfiles = $this->getParam('notryfiles', true, $result['notryfiles']);
 			$documentroot = $this->getParam('documentroot', true, $result['documentroot']);
 			$phpenabled = $this->getParam('phpenabled', true, $result['phpenabled']);
@@ -842,7 +841,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				$zonefile = $result['zonefile'];
 				$dkim = $result['dkim'];
 				$specialsettings = $result['specialsettings'];
-				$ssfs = (empty($specialsettings) ? 0 : 1);
 				$notryfiles = $result['notryfiles'];
 				$documentroot = $result['documentroot'];
 			}
@@ -1136,21 +1134,6 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 			
 			$_update_data = array();
-			
-			if ($ssfs == 1) {
-				$_update_data['specialsettings'] = $specialsettings;
-				$upd_specialsettings = ", `specialsettings` = :specialsettings ";
-			} else {
-				$upd_specialsettings = '';
-				unset($_update_data['specialsettings']);
-				$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `specialsettings`='' WHERE `parentdomainid` = :id
-				");
-				Database::pexecute($upd_stmt, array(
-					'id' => $id
-				), true, true);
-				$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] removed specialsettings on all subdomains of domain #" . $id);
-			}
 			
 			$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
 			$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';

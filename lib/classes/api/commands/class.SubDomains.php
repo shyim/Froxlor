@@ -64,6 +64,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$redirectcode = $this->getParam('redirectcode', true, Settings::Get('customredirect.default'));
 			$isemaildomain = $this->getParam('isemaildomain', true, 0);
             $notryfiles = $this->getParam('notryfiles', false, 0);
+            $specialsettings = $this->getParam('specialsettings', true, '');
 			if (Settings::Get('system.use_ssl')) {
 				$ssl_redirect = $this->getParam('ssl_redirect', true, 0);
 				$letsencrypt = $this->getParam('letsencrypt', true, 0);
@@ -273,7 +274,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"openbasedir_path" => $openbasedir_path,
 				"phpenabled" => $domain_check['phpenabled'],
 				"speciallogfile" => $domain_check['speciallogfile'],
-				"specialsettings" => $domain_check['specialsettings'],
+				"specialsettings" => $specialsettings,
 				"ssl_redirect" => $ssl_redirect,
 				"phpsettingid" => $phpsid_result['phpsettingid'],
 				"letsencrypt" => $letsencrypt,
@@ -281,7 +282,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"hsts_sub" => $hsts_sub,
 				"hsts_preload" => $hsts_preload,
                 "http2" => $http2,
-                'notryfiles' => $notryfiles
+                "notryfiles" => $notryfiles
 			);
 			Database::pexecute($stmt, $params, true, true);
 			$subdomain_id = Database::lastInsertId();
@@ -440,6 +441,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
 		$redirectcode = $this->getParam('redirectcode', true, getDomainRedirectId($id));
 		$notryfiles = $this->getParam('notryfiles', false, $result['notryfiles']);
+        $specialsettings = $this->getParam('specialsettings', true, $result['specialsettings']);
 		if (Settings::Get('system.use_ssl')) {
 			$ssl_redirect = $this->getParam('ssl_redirect', true, $result['ssl_redirect']);
 			$letsencrypt = $this->getParam('letsencrypt', true, $result['letsencrypt']);
@@ -455,6 +457,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$hsts_preload = 0;
 			$http2 = 0;
 		}
+
+        $specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
 		
 		// get needed customer info to reduce the subdomain-usage-counter by one
 		$customer = $this->getCustomerData();
@@ -464,6 +468,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			"aliasdomain" => $result['id']
 		));
 		$alias_check = $alias_check['count'];
+        $specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
 		
 		// alias domain checked?
 		if ($aliasdomain != 0) {
@@ -559,7 +564,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			updateRedirectOfDomain($id, $redirectcode);
 		}
 
-		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid'] || $http2 != $result['http2'] || $notryfiles != $result['notryfiles']) {
+		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid'] || $http2 != $result['http2'] || $notryfiles != $result['notryfiles'] || $specialsettings != $result['specialsettings']) {
 			$stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 					`documentroot`= :documentroot,
@@ -575,7 +580,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					`hsts_preload` = :hsts_preload,
 					`phpsettingid` = :phpsettingid,
 					`http2` = :http2,
-					`notryfiles` = :notryfiles
+					`notryfiles` = :notryfiles,
+					`specialsettings` = :specialsettings
 					WHERE `customerid`= :customerid AND `id`= :id
 				");
 			$params = array(
@@ -594,7 +600,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"customerid" => $customer['customerid'],
 				"id" => $id,
                 "http2" => $http2,
-                "notryfiles" => $notryfiles
+                "notryfiles" => $notryfiles,
+                "specialsettings" => $specialsettings
 			);
 			Database::pexecute($stmt, $params, true, true);
 			
