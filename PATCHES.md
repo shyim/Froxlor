@@ -5,3 +5,4 @@ Patches applied to Froxlor
 * Enable notryfiles change on Subdomain
 * Fix redirect url request uri
 * Enable special configuration for subdomains
+* Enable php per subdomain

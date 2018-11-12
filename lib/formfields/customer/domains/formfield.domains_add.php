@@ -71,6 +71,19 @@ return array(
 						'type' => 'select',
 						'select_var' => $openbasedir
 					),
+                    'phpenabled' => array(
+                        'label' => $lng['admin']['phpenabled'],
+                        'type' => 'checkbox',
+                        'values' => array(
+                            array(
+                                'label' => $lng['panel']['yes'],
+                                'value' => '1'
+                            )
+                        ),
+                        'value' => array(
+                            1
+                        )
+                    ),
 					'phpsettingid' => array(
 						'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) && $has_phpconfigs ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],
