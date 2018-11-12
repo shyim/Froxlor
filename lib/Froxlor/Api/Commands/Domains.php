@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -181,7 +181,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional whether or not to preload HSTS header value
 	 * @param bool $ocsp_stapling
 	 *        	optional whether to enable oscp-stapling for this domain. default 0 (false), requires SSL
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return array
@@ -738,7 +738,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional whether or not to preload HSTS header value
 	 * @param bool $ocsp_stapling
 	 *        	optional whether to enable oscp-stapling for this domain. default 0 (false), requires SSL
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return array
@@ -973,7 +973,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$zonefile = $result['zonefile'];
 				$dkim = $result['dkim'];
 				$specialsettings = $result['specialsettings'];
-				$ssfs = (empty($specialsettings) ? 0 : 1);
 				$notryfiles = $result['notryfiles'];
 				$writeaccesslog = $result['writeaccesslog'];
 				$writeerrorlog = $result['writeerrorlog'];

@@ -92,6 +92,16 @@ return array(
 						'type' => 'select',
 						'select_var' => $phpconfigs
 					),
+                    'specialsettings' => array(
+                        'visible' => true,
+                        'style' => 'align-top',
+                        'label' => $lng['admin']['ownvhostsettings'],
+                        'desc' => $lng['serversettings']['default_vhostconf']['description'],
+                        'type' => 'textarea',
+                        'value' => $result['specialsettings'],
+                        'cols' => 60,
+                        'rows' => 12
+                    ),
                     'notryfiles' => array(
                         'visible' => (Settings::Get('system.webserver') == 'nginx'),
                         'label' => $lng['admin']['notryfiles']['title'],
