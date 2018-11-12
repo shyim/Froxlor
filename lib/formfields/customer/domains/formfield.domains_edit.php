@@ -140,6 +140,21 @@ return array(
 						),
 						'value' => array($result['hsts_preload'])
 					),
+                    'http2' => array(
+                        'visible' => ($ssl_ipsandports != '' ? true : false) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http2_support') == '1',
+                        'label' => $lng['admin']['domain_http2']['title'],
+                        'desc' => $lng['admin']['domain_http2']['description'],
+                        'type' => 'checkbox',
+                        'values' => array(
+                            array (
+                                'label' => $lng['panel']['yes'],
+                                'value' => '1'
+                            )
+                        ),
+                        'value' => array(
+                            $result['http2']
+                        )
+                    ),
 				)
 			),
 		)

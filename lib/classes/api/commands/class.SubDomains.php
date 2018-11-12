@@ -69,12 +69,14 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
 				$hsts_sub = $this->getParam('hsts_sub', true, 0);
 				$hsts_preload = $this->getParam('hsts_preload', true, 0);
+                $http2 = $this->getParam('http2', true, 0);
 			} else {
 				$ssl_redirect = 0;
 				$letsencrypt = 0;
 				$hsts_maxage = 0;
 				$hsts_sub = 0;
 				$hsts_preload = 0;
+				$http2 = 0;
 			}
 			
 			// get needed customer info to reduce the subdomain-usage-counter by one
@@ -252,7 +254,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				`letsencrypt` = :letsencrypt,
 				`hsts` = :hsts,
 				`hsts_sub` = :hsts_sub,
-				`hsts_preload` = :hsts_preload
+				`hsts_preload` = :hsts_preload,
+				`http2` = :http2
 			");
 			$params = array(
 				"customerid" => $customer['customerid'],
@@ -274,7 +277,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"letsencrypt" => $letsencrypt,
 				"hsts" => $hsts_maxage,
 				"hsts_sub" => $hsts_sub,
-				"hsts_preload" => $hsts_preload
+				"hsts_preload" => $hsts_preload,
+                "http2" => $http2
 			);
 			Database::pexecute($stmt, $params, true, true);
 			$subdomain_id = Database::lastInsertId();
@@ -438,12 +442,14 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts']);
 			$hsts_sub = $this->getParam('hsts_sub', true, $result['hsts_sub']);
 			$hsts_preload = $this->getParam('hsts_preload', true, $result['hsts_preload']);
+            $http2 = $this->getParam('http2', true, $result['http2']);
 		} else {
 			$ssl_redirect = 0;
 			$letsencrypt = 0;
 			$hsts_maxage = 0;
 			$hsts_sub = 0;
 			$hsts_preload = 0;
+			$http2 = 0;
 		}
 		
 		// get needed customer info to reduce the subdomain-usage-counter by one
@@ -548,8 +554,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		if ($_doredirect) {
 			updateRedirectOfDomain($id, $redirectcode);
 		}
-		
-		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid']) {
+
+		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid'] || $http2 != $result['http2']) {
 			$stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 					`documentroot`= :documentroot,
@@ -563,7 +569,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					`hsts` = :hsts,
 					`hsts_sub` = :hsts_sub,
 					`hsts_preload` = :hsts_preload,
-					`phpsettingid` = :phpsettingid
+					`phpsettingid` = :phpsettingid,
+					`http2` = :http2
 					WHERE `customerid`= :customerid AND `id`= :id
 				");
 			$params = array(
@@ -580,7 +587,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"hsts_preload" => $hsts_preload,
 				"phpsettingid" => $phpsettingid,
 				"customerid" => $customer['customerid'],
-				"id" => $id
+				"id" => $id,
+                "http2" => $http2
 			);
 			Database::pexecute($stmt, $params, true, true);
 			
