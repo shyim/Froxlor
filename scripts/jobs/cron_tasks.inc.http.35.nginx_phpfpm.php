@@ -39,6 +39,9 @@ class nginx_phpfpm extends nginx
 			}
 			$php_options_text .= "\t\t" . 'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ";\n";
 			$php_options_text .= "\t\t" . 'fastcgi_index index.php;' . "\n";
+            if ($domain['ssl'] == '1' && $ssl_vhost && Settings::Get('system.http2_support') == '1') {
+                $php_options_text .= "\t\t" . 'http2_push_preload on;' . "\n";
+            }
 			$php_options_text .= "\t}\n\n";
 			
 			// create starter-file | config-file
