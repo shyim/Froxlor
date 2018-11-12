@@ -1369,11 +1369,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 				`customerid` = :customerid,
 				`adminid` = :adminid,
-				`phpenabled` = :phpenabled,
 				`openbasedir` = :openbasedir,
 				`mod_fcgid_starter` = :mod_fcgid_starter,
 				`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests
-				" . $update_phpconfig . $upd_specialsettings . $updatechildren . $update_sslredirect . "
+				" . $update_phpconfig . $updatechildren . $update_sslredirect . "
 				WHERE `parentdomainid` = :parentdomainid
 			");
 			Database::pexecute($_update_stmt, $_update_data, true, true);
