@@ -76,7 +76,22 @@ return array(
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs
-					)
+					),
+                    'notryfiles' => array(
+                        'visible' => (Settings::Get('system.webserver') == 'nginx'),
+                        'label' => $lng['admin']['notryfiles']['title'],
+                        'desc' => $lng['admin']['notryfiles']['description'],
+                        'type' => 'checkbox',
+                        'values' => array(
+                            array(
+                                'label' => $lng['panel']['yes'],
+                                'value' => '1'
+                            )
+                        ),
+                        'value' => array(
+                            0
+                        )
+                    )
 				)
 			),
 			'section_bssl' => array(
