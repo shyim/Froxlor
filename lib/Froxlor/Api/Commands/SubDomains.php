@@ -497,7 +497,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$http2 = 0;
 		}
 
-        $specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+        $specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
 
 		// get needed customer info to reduce the subdomain-usage-counter by one
 		$customer = $this->getCustomerData();
@@ -507,7 +507,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			"aliasdomain" => $result['id']
 		));
 		$alias_check = $alias_check['count'];
-        $specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+        $specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
 
 		// alias domain checked?
 		if ($aliasdomain != 0) {
